@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ferme Industrielle - Jeu de Gestion Agricole</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/images/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/images/icon-192.png">
+</head>
+<body>
+    <!-- Barre de statistiques en haut -->
+    <header class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-icon">💰</span>
+            <span class="stat-label">Argent:</span>
+            <span id="money" class="stat-value">50,000€</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-icon">📊</span>
+            <span class="stat-label">Production:</span>
+            <span id="production" class="stat-value">0 t/j</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-icon">🌤️</span>
+            <span class="stat-label">Météo:</span>
+            <span id="weather" class="stat-value">Ensoleillé</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-icon">⏰</span>
+            <span class="stat-label">Jour:</span>
+            <span id="day" class="stat-value">1</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-icon">🏆</span>
+            <span class="stat-label">Score:</span>
+            <span id="score" class="stat-value">0</span>
+        </div>
+    </header>
+
+    <!-- Zone principale de jeu -->
+    <main class="game-container">
+        <!-- Canvas de jeu isométrique -->
+        <div class="game-area">
+            <canvas id="gameCanvas" width="1200" height="800"></canvas>
+            
+            <!-- Contrôles de la caméra -->
+            <div class="camera-controls">
+                <button id="zoomIn" class="control-btn" title="Zoomer">🔍+</button>
+                <button id="zoomOut" class="control-btn" title="Dézoomer">🔍-</button>
+                <button id="resetView" class="control-btn" title="Centrer la vue">🎯</button>
+            </div>
+        </div>
+
+        <!-- Panneau latéral de gestion -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>Gestion de la Ferme</h2>
+                <button id="toggleSidebar" class="toggle-btn">◀</button>
+            </div>
+
+            <!-- Onglets de navigation -->
+            <nav class="tabs">
+                <button class="tab-btn active" data-tab="crops">🌾 Cultures</button>
+                <button class="tab-btn" data-tab="livestock">🐄 Élevage</button>
+                <button class="tab-btn" data-tab="machines">🚜 Machines</button>
+                <button class="tab-btn" data-tab="market">📈 Marché</button>
+                <button class="tab-btn" data-tab="finance">💼 Finance</button>
+            </nav>
+
+            <!-- Contenu des onglets -->
+            <div class="tab-content">
+                <!-- Onglet Cultures -->
+                <div id="crops-tab" class="tab-panel active">
+                    <h3>Gestion des Cultures</h3>
+                    <div class="crop-selection">
+                        <label for="cropType">Type de culture:</label>
+                        <select id="cropType">
+                            <option value="wheat">Blé - 100€</option>
+                            <option value="corn">Maïs - 150€</option>
+                            <option value="soybean">Soja - 200€</option>
+                            <option value="potato">Pomme de terre - 80€</option>
+                        </select>
+                        <button id="plantCrop" class="action-btn">Planter</button>
+                    </div>
+                    <div class="crop-info">
+                        <h4>Statistiques des cultures</h4>
+                        <div id="cropStats"></div>
+                    </div>
+                </div>
+
+                <!-- Onglet Élevage -->
+                <div id="livestock-tab" class="tab-panel">
+                    <h3>Gestion de l'Élevage</h3>
+                    <div class="livestock-selection">
+                        <label for="livestockType">Type d'animal:</label>
+                        <select id="livestockType">
+                            <option value="cow">Vache - 1,500€</option>
+                            <option value="pig">Cochon - 800€</option>
+                            <option value="chicken">Poule - 50€</option>
+                            <option value="sheep">Mouton - 600€</option>
+                        </select>
+                        <button id="buyLivestock" class="action-btn">Acheter</button>
+                    </div>
+                    <div class="livestock-info">
+                        <h4>Cheptel actuel</h4>
+                        <div id="livestockStats"></div>
+                    </div>
+                </div>
+
+                <!-- Onglet Machines -->
+                <div id="machines-tab" class="tab-panel">
+                    <h3>Gestion des Machines</h3>
+                    <div class="machine-selection">
+                        <label for="machineType">Type de machine:</label>
+                        <select id="machineType">
+                            <option value="tractor">Tracteur - 25,000€</option>
+                            <option value="harvester">Moissonneuse - 80,000€</option>
+                            <option value="sprayer">Pulvérisateur - 15,000€</option>
+                            <option value="seeder">Semoir - 20,000€</option>
+                        </select>
+                        <button id="buyMachine" class="action-btn">Acheter</button>
+                    </div>
+                    <div class="machine-info">
+                        <h4>Parc de machines</h4>
+                        <div id="machineStats"></div>
+                    </div>
+                </div>
+
+                <!-- Onglet Marché -->
+                <div id="market-tab" class="tab-panel">
+                    <h3>Prix du Marché</h3>
+                    <div class="market-prices">
+                        <div id="marketPrices"></div>
+                    </div>
+                    <div class="trade-section">
+                        <h4>Vendre des récoltes</h4>
+                        <div class="sell-controls">
+                            <select id="sellProduct">
+                                <option value="">Sélectionner un produit</option>
+                            </select>
+                            <input type="number" id="sellQuantity" placeholder="Quantité" min="1">
+                            <button id="sellButton" class="action-btn">Vendre</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Onglet Finance -->
+                <div id="finance-tab" class="tab-panel">
+                    <h3>Finances</h3>
+                    <div class="financial-overview">
+                        <div class="finance-item">
+                            <span>Revenus totaux:</span>
+                            <span id="totalRevenue">0€</span>
+                        </div>
+                        <div class="finance-item">
+                            <span>Dépenses totales:</span>
+                            <span id="totalExpenses">0€</span>
+                        </div>
+                        <div class="finance-item">
+                            <span>Profit net:</span>
+                            <span id="netProfit">0€</span>
+                        </div>
+                    </div>
+                    <div class="loan-section">
+                        <h4>Emprunts</h4>
+                        <button id="takeLoan" class="action-btn">Emprunter 10,000€</button>
+                        <div id="loanInfo"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Menu de pause/options -->
+    <div id="pauseMenu" class="pause-menu hidden">
+        <div class="menu-content">
+            <h2>Menu</h2>
+            <button id="resumeGame" class="menu-btn">Reprendre</button>
+            <button id="saveGame" class="menu-btn">Sauvegarder</button>
+            <button id="loadGame" class="menu-btn">Charger</button>
+            <button id="restartGame" class="menu-btn">Recommencer</button>
+            <button id="settingsMenu" class="menu-btn">Paramètres</button>
+        </div>
+    </div>
+
+    <!-- Bouton de pause -->
+    <button id="pauseBtn" class="pause-btn" title="Pause">⏸️</button>
+
+    <!-- Messages de notification -->
+    <div id="notifications" class="notifications"></div>
+
+    <!-- Chargement -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2>Chargement de la ferme...</h2>
+            <p>Préparation des terres agricoles</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Enregistrement du service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(registration => {
+                        console.log('SW enregistré: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('Échec enregistrement SW: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
