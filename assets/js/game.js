@@ -71,18 +71,50 @@ class Game {
     
     // Initialiser tous les modules du jeu
     initializeModules() {
-        // Initialiser les modules si ils existent
-        if (window.Crops) {
-            window.Crops.init(this);
+        // Initialiser les managers
+        if (typeof CropsManager !== 'undefined') {
+            this.cropsManager = new CropsManager();
+            this.cropsManager.init(this);
         }
-        if (window.Weather) {
-            window.Weather.init(this);
+        
+        if (typeof LivestockManager !== 'undefined') {
+            this.livestockManager = new LivestockManager();
+            this.livestockManager.init(this);
         }
-        if (window.Market) {
-            window.Market.init(this);
+        
+        if (typeof MachinesManager !== 'undefined') {
+            this.machinesManager = new MachinesManager();
+            this.machinesManager.init(this);
         }
+        
+        if (typeof ProductionManager !== 'undefined') {
+            this.productionManager = new ProductionManager();
+            this.productionManager.init(this);
+        }
+        
+        if (typeof MarketManager !== 'undefined') {
+            this.marketManager = new MarketManager();
+            this.marketManager.init(this);
+        }
+        
+        if (typeof WeatherManager !== 'undefined') {
+            this.weatherManager = new WeatherManager();
+            this.weatherManager.init(this);
+        }
+        
+        if (typeof FinanceManager !== 'undefined') {
+            this.financeManager = new FinanceManager();
+            this.financeManager.init(this);
+        }
+        
+        if (typeof SaveManager !== 'undefined') {
+            this.saveManager = new SaveManager();
+            this.saveManager.init(this);
+        }
+        
         if (window.UI) {
-            window.UI.init(this);
+            this.uiManager = window.UI;
+            this.uiManager.init(this);
         }
     }
     
@@ -211,8 +243,23 @@ class Game {
         this.drawGrid();
         
         // Dessiner les cultures
-        if (window.Crops) {
-            window.Crops.render(this.ctx);
+        if (this.cropsManager) {
+            this.cropsManager.render(this.ctx);
+        }
+        
+        // Dessiner l'élevage
+        if (this.livestockManager) {
+            this.livestockManager.render(this.ctx);
+        }
+        
+        // Dessiner les machines
+        if (this.machinesManager) {
+            this.machinesManager.render(this.ctx);
+        }
+        
+        // Dessiner la production
+        if (this.productionManager) {
+            this.productionManager.render(this.ctx);
         }
         
         // Restaurer le contexte
@@ -262,14 +309,32 @@ class Game {
         if (this.isPaused) return;
         
         // Mettre à jour les modules
-        if (window.Crops) {
-            window.Crops.update(deltaTime);
+        if (this.cropsManager) {
+            this.cropsManager.update(deltaTime);
         }
-        if (window.Weather) {
-            window.Weather.update(deltaTime);
+        if (this.livestockManager) {
+            this.livestockManager.update(deltaTime);
         }
-        if (window.Market) {
-            window.Market.update(deltaTime);
+        if (this.machinesManager) {
+            this.machinesManager.update(deltaTime);
+        }
+        if (this.productionManager) {
+            this.productionManager.update(deltaTime);
+        }
+        if (this.marketManager) {
+            this.marketManager.update(deltaTime);
+        }
+        if (this.weatherManager) {
+            this.weatherManager.update(deltaTime);
+        }
+        if (this.financeManager) {
+            this.financeManager.update(deltaTime);
+        }
+        if (this.saveManager) {
+            this.saveManager.update(deltaTime);
+        }
+        if (this.uiManager) {
+            this.uiManager.update(deltaTime);
         }
         
         // Mettre à jour l'interface utilisateur
@@ -315,6 +380,11 @@ class Game {
     earnMoney(amount) {
         this.gameState.money += amount;
         this.gameState.score += Math.floor(amount * 0.1);
+    }
+    
+    // Ajouter de l'argent (alias pour earnMoney)
+    addMoney(amount) {
+        this.earnMoney(amount);
     }
 }
 
