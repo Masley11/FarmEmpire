@@ -25,6 +25,8 @@ class UIManager {
     
     // Configuration des écouteurs d'événements
     setupEventListeners() {
+        console.log('⚙️ Configuration des événements UI...');
+        
         // Bouton de pause
         const pauseBtn = document.getElementById('pauseBtn');
         if (pauseBtn) {
@@ -32,6 +34,56 @@ class UIManager {
                 if (this.game) {
                     this.game.togglePause();
                     this.updatePauseButton();
+                }
+            });
+        }
+        
+        // Gestionnaires pour les cultures
+        const plantCropBtn = document.getElementById('plantCrop');
+        if (plantCropBtn) {
+            plantCropBtn.addEventListener('click', () => {
+                const cropType = document.getElementById('cropType')?.value;
+                if (cropType && this.game && this.game.cropsManager) {
+                    this.game.cropsManager.plantCrop(cropType);
+                }
+            });
+        }
+        
+        // Gestionnaires pour l'élevage
+        const buyLivestockBtn = document.getElementById('buyLivestock');
+        if (buyLivestockBtn) {
+            buyLivestockBtn.addEventListener('click', () => {
+                const animalType = document.getElementById('livestockType')?.value;
+                if (animalType && this.game && this.game.livestockManager) {
+                    this.game.livestockManager.buyAnimal(animalType);
+                }
+            });
+        }
+        
+        // Gestionnaires pour les machines
+        const buyMachineBtn = document.getElementById('buyMachine');
+        if (buyMachineBtn) {
+            buyMachineBtn.addEventListener('click', () => {
+                const machineType = document.getElementById('machineType')?.value;
+                if (machineType && this.game && this.game.machinesManager) {
+                    this.game.machinesManager.buyMachine(machineType);
+                }
+            });
+        }
+        
+        // Gestionnaires pour les ventes
+        const sellBtn = document.getElementById('sellButton');
+        if (sellBtn) {
+            sellBtn.addEventListener('click', () => {
+                const product = document.getElementById('sellProduct')?.value;
+                const quantity = parseInt(document.getElementById('sellQuantity')?.value) || 0;
+                
+                if (product && quantity > 0 && this.game) {
+                    if (this.game.cropsManager && this.game.cropsManager.sellCrop) {
+                        this.game.cropsManager.sellCrop(product, quantity);
+                    } else if (this.game.livestockManager && this.game.livestockManager.sellProduct) {
+                        this.game.livestockManager.sellProduct(product, quantity);
+                    }
                 }
             });
         }

@@ -100,8 +100,11 @@ async function initializeGame() {
         
         // Initialisation de l\'interface utilisateur
         if (typeof UI !== 'undefined') {
-            UI.init();
+            UI.init(game);
             console.log('✅ UI.init() terminé avec succès');
+        } else if (window.UI) {
+            window.UI.init(game);
+            console.log('✅ window.UI.init() terminé avec succès');
         }
         
         // Démarrage de la boucle de jeu

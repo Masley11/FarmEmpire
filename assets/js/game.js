@@ -71,50 +71,98 @@ class Game {
     
     // Initialiser tous les modules du jeu
     initializeModules() {
-        // Initialiser les managers
-        if (typeof CropsManager !== 'undefined') {
-            this.cropsManager = new CropsManager();
-            this.cropsManager.init(this);
-        }
+        console.log('🔧 Initialisation des modules...');
         
-        if (typeof LivestockManager !== 'undefined') {
-            this.livestockManager = new LivestockManager();
-            this.livestockManager.init(this);
-        }
-        
-        if (typeof MachinesManager !== 'undefined') {
-            this.machinesManager = new MachinesManager();
-            this.machinesManager.init(this);
-        }
-        
-        if (typeof ProductionManager !== 'undefined') {
-            this.productionManager = new ProductionManager();
-            this.productionManager.init(this);
-        }
-        
-        if (typeof MarketManager !== 'undefined') {
-            this.marketManager = new MarketManager();
-            this.marketManager.init(this);
-        }
-        
-        if (typeof WeatherManager !== 'undefined') {
-            this.weatherManager = new WeatherManager();
-            this.weatherManager.init(this);
-        }
-        
-        if (typeof FinanceManager !== 'undefined') {
-            this.financeManager = new FinanceManager();
-            this.financeManager.init(this);
-        }
-        
-        if (typeof SaveManager !== 'undefined') {
-            this.saveManager = new SaveManager();
-            this.saveManager.init(this);
-        }
-        
-        if (window.UI) {
-            this.uiManager = window.UI;
-            this.uiManager.init(this);
+        // Initialiser les managers avec vérification
+        try {
+            if (typeof CropsManager !== 'undefined') {
+                this.cropsManager = new CropsManager();
+                this.cropsManager.init(this);
+                console.log('✅ CropsManager initialisé');
+            } else if (window.Crops) {
+                this.cropsManager = window.Crops;
+                this.cropsManager.init(this);
+                console.log('✅ Crops (global) initialisé');
+            }
+            
+            if (typeof LivestockManager !== 'undefined') {
+                this.livestockManager = new LivestockManager();
+                this.livestockManager.init(this);
+                console.log('✅ LivestockManager initialisé');
+            } else if (window.Livestock) {
+                this.livestockManager = window.Livestock;
+                this.livestockManager.init(this);
+                console.log('✅ Livestock (global) initialisé');
+            }
+            
+            if (typeof MachinesManager !== 'undefined') {
+                this.machinesManager = new MachinesManager();
+                this.machinesManager.init(this);
+                console.log('✅ MachinesManager initialisé');
+            } else if (window.Machines) {
+                this.machinesManager = window.Machines;
+                this.machinesManager.init(this);
+                console.log('✅ Machines (global) initialisé');
+            }
+            
+            if (typeof ProductionManager !== 'undefined') {
+                this.productionManager = new ProductionManager();
+                this.productionManager.init(this);
+                console.log('✅ ProductionManager initialisé');
+            } else if (window.Production) {
+                this.productionManager = window.Production;
+                this.productionManager.init(this);
+                console.log('✅ Production (global) initialisé');
+            }
+            
+            if (typeof MarketManager !== 'undefined') {
+                this.marketManager = new MarketManager();
+                this.marketManager.init(this);
+                console.log('✅ MarketManager initialisé');
+            } else if (window.Market) {
+                this.marketManager = window.Market;
+                this.marketManager.init(this);
+                console.log('✅ Market (global) initialisé');
+            }
+            
+            if (typeof WeatherManager !== 'undefined') {
+                this.weatherManager = new WeatherManager();
+                this.weatherManager.init(this);
+                console.log('✅ WeatherManager initialisé');
+            } else if (window.Weather) {
+                this.weatherManager = window.Weather;
+                this.weatherManager.init(this);
+                console.log('✅ Weather (global) initialisé');
+            }
+            
+            if (typeof FinanceManager !== 'undefined') {
+                this.financeManager = new FinanceManager();
+                this.financeManager.init(this);
+                console.log('✅ FinanceManager initialisé');
+            } else if (window.Finance) {
+                this.financeManager = window.Finance;
+                this.financeManager.init(this);
+                console.log('✅ Finance (global) initialisé');
+            }
+            
+            if (typeof SaveManager !== 'undefined') {
+                this.saveManager = new SaveManager();
+                this.saveManager.init(this);
+                console.log('✅ SaveManager initialisé');
+            } else if (window.Save) {
+                this.saveManager = window.Save;
+                this.saveManager.init(this);
+                console.log('✅ Save (global) initialisé');
+            }
+            
+            if (window.UI) {
+                this.uiManager = window.UI;
+                this.uiManager.init(this);
+                console.log('✅ UI initialisé');
+            }
+            
+        } catch (error) {
+            console.error('❌ Erreur lors de l\'initialisation des modules:', error);
         }
     }
     
