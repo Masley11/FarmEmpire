@@ -1,2 +1,14 @@
 [nix]
 channel = "stable-25_05"
+
+[workflows]
+runButton = "Démarrer Serveur"
+
+[[workflows.workflow]]
+name = "Démarrer Serveur"
+author = 46305857
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python server.py"
